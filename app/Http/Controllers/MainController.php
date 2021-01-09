@@ -44,7 +44,6 @@ class MainController extends Controller
     public function updateMake(Request $request, $id)
     {
         $this->validate($request, [
-            //'id' => 'required|integer',
             'name' => 'required|string',
         ]);
         $make = MainMake::find($id);
@@ -52,10 +51,10 @@ class MainController extends Controller
         {
             $make->name = $request->input('name');
             $make->save();
-            return response()->json($make,200);
+            return response()->json($make, 200);
         }
         else{
-            return response()->json(['Message'=>'Make does not exist.'],400);
+            return response()->json(['Message'=>'Make does not exist.'],404);
         }
     }
 
@@ -106,7 +105,7 @@ class MainController extends Controller
             $model->save();
             return response()->json($model,200);
         }else{
-            return response()->json(['Message'=>'make does not exist.'], 400);
+            return response()->json(['Message'=>'make does not exist.'], 404);
         }
     }
 
