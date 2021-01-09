@@ -109,7 +109,7 @@ class MainController extends Controller
         }
     }
 
-    public function updateModel(Request $request)
+    public function updateModel(Request $request, $id)
     {
         $this->validate($request, [
             'make' => 'required|integer',
@@ -120,7 +120,7 @@ class MainController extends Controller
         $make = MainMake::find($make_id);
 
         if ($make) {
-            $model = MakeModel::find($request->input('id'));
+            $model = MakeModel::find($id);
             $model->name = $request->input('name');
             $model->main_make_id = $make_id;
             $model->save();
@@ -143,7 +143,7 @@ class MainController extends Controller
             return response()->json(['message'=>'Model removed.'],200);
         }
         else{
-            return response()->json(['Message'=>'Model does not exist.'],400);
+            return response()->json(['Message'=>'Model does not exist.'],404);
         }
             
     }
@@ -167,14 +167,13 @@ class MainController extends Controller
         return response()->json($fuel,200);
     }
 
-    public function updateFuel(Request $request)
+    public function updateFuel(Request $request, $id)
     {
         $this->validate($request, [
-            'id' => 'required|integer',
             'name' => 'required|string|unique:fuels',
         ]);
 
-        $fuel = Fuel::find($request->input('id'));
+        $fuel = Fuel::find($id);
         if($fuel)
         {
             $fuel->name = $request->input('name');
@@ -222,14 +221,13 @@ class MainController extends Controller
         return response()->json($vehicleType,200);
     }
 
-    public function updateVehicleType(Request $request)
+    public function updateVehicleType(Request $request, $id)
     {
         $this->validate($request, [
-            'id' => 'required|integer',
             'name' => 'required|string',
         ]);
         
-        $vehicleType = VehicleType::find($request->input('id'));
+        $vehicleType = VehicleType::find($id);
         if($vehicleType)
         {
             $vehicleType->name = $request->input('name');
@@ -304,7 +302,7 @@ class MainController extends Controller
         return response()->json($vehicle,200);
     }
 
-    public function updateVehicle(Request $request)
+    public function updateVehicle(Request $request, $id)
     {
         $this->validate($request, [
             'model_id' => 'required|integer',
@@ -322,29 +320,35 @@ class MainController extends Controller
         $make = MakeModel::with('make')->where('id',$model)->first();
         $year = $request->input('year');
 
-        $vehicle = Vehicle::find($request->input('id'));
-        $vehicle->model_id = $model;
-        $vehicle->fuel_id = $request->input('fuel_id');
-        $vehicle->vehicle_type_id = $request->input('vehicle_type_id');
-        $vehicle->year = $year;
-        $vehicle->chassis = $request->input('chassis');
-        $vehicle->condition = $request->input('condition');
-        $vehicle->description = $request->input('description');
-        $vehicle->status = $request->input('status');
+        if($make){
 
-        if($vehicle->model_id != $model){
-            $vehicle->slug = Str::slug($make->make->name.' '.$make->name.' '.$year.' '.time());
+            $vehicle = Vehicle::find($id);
+            $vehicle->model_id = $model;
+            $vehicle->fuel_id = $request->input('fuel_id');
+            $vehicle->vehicle_type_id = $request->input('vehicle_type_id');
+            $vehicle->year = $year;
+            $vehicle->chassis = $request->input('chassis');
+            $vehicle->condition = $request->input('condition');
+            $vehicle->description = $request->input('description');
+            $vehicle->status = $request->input('status');
+
+            if($vehicle->model_id != $model){
+                $vehicle->slug = Str::slug($make->make->name.' '.$make->name.' '.$year.' '.time());
+            }
+
+            if ($request->hasFile('image')) {
+                $search = public_path().'/images/'.$vehicle->image;
+                \File::delete($search);
+                $vehicle->image = $this->saveImage($request->file('image'));
+            }
+
+            $vehicle->save();
+            return response()->json($vehicle,200);
+        }
+        else{
+            return response()->json(['Message'=>'Model does not exist.'],404);
         }
 
-        if ($request->hasFile('image')) {
-            $search = public_path().'/images/'.$vehicle->image;
-            \File::delete($search);
-
-            $vehicle->image = $this->saveImage($request->file('image'));
-        }
-
-        $vehicle->save();
-        return response()->json($vehicle,200);
     }
 
     public function deleteVehicle(Request $request)
