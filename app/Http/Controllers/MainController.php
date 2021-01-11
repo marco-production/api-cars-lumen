@@ -25,7 +25,6 @@ class MainController extends Controller
     /* Make methods */
     public function getMakes()
     {
-        //orderBy('id','ASC')->get()
         $make = MainMake::All();
         return response()->json($make,200);
     }
