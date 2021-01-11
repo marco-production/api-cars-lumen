@@ -13,10 +13,6 @@
 |
 */
 
-$router->get('/', function () use ($router) {
-    return '<b>Marco Antonio De la cruz Santos</b>'.'<br>'.$router->app->version();
-});
-
 /* User Endpoint */
 //READ
 $router->get('/users[/{slug}]', [ 'uses' => 'UserController@getUsers', 'as' => 'users']);
@@ -33,7 +29,7 @@ $router->get('/vehicles', [ 'uses' => 'MainController@getVehicles', 'as' => 'Veh
 $router->put('/vehicles/{id}', [ 'uses' => 'MainController@updateVehicle']);
 
 //DELETE
-$router->delete('/vehicles', [ 'uses' => 'MainController@deleteVehicle']);
+$router->delete('/vehicles/{id}', [ 'uses' => 'MainController@deleteVehicle']);
 
 
 /* Make Endpoint */
@@ -47,13 +43,10 @@ $router->get('/makes', [ 'uses' => 'MainController@getMakes', 'as' => 'makes']);
 $router->put('/makes/{id}', [ 'uses' => 'MainController@updateMake']);
 
 //DELETE
-$router->delete('/makes', [ 'uses' => 'MainController@deleteMake']);
+$router->delete('/makes/{id}', [ 'uses' => 'MainController@deleteMake']);
 
 
 /* Model Endpoint */
-//GET
-//$router->get('/model[/{make}]', [ 'uses' => 'MainController@getMakeModels']);
-
 //CREATE
 $router->post('/models', [ 'uses' => 'MainController@createModel']);
 
@@ -64,7 +57,7 @@ $router->get('/models[/{make}]', [ 'uses' => 'MainController@getModels', 'as' =>
 $router->put('/models/{id}', [ 'uses' => 'MainController@updateModel']);
 
 //DELETE
-$router->delete('/models', [ 'uses' => 'MainController@deleteModel']);
+$router->delete('/models/{id}', [ 'uses' => 'MainController@deleteModel']);
 
 
 /* Fuel Endpoint */
@@ -78,7 +71,7 @@ $router->get('/fuels', [ 'uses' => 'MainController@getFuels', 'as' => 'Fuels']);
 $router->put('/fuels/{id}', [ 'uses' => 'MainController@updateFuel']);
 
 //DELETE
-$router->delete('/fuels', [ 'uses' => 'MainController@deleteFuel']);
+$router->delete('/fuels/{id}', [ 'uses' => 'MainController@deleteFuel']);
 
 
 /* VehicleType Endpoint */
@@ -92,4 +85,63 @@ $router->get('/vehicletypes', [ 'uses' => 'MainController@getVehicleTypes', 'as'
 $router->put('/vehicletypes/{id}', [ 'uses' => 'MainController@updateVehicleType']);
 
 //DELETE
-$router->delete('/vehicletypes', [ 'uses' => 'MainController@deleteVehicleType']);
+$router->delete('/vehicletypes/{id}', [ 'uses' => 'MainController@deleteVehicleType']);
+
+
+/* Api Index */
+$router->get('/', function () use ($router) {
+    return '<b>Marco Antonio De la cruz Santos</b><br>'.$router->app->version().'<br>'
+    .'<pre style="color:#FFF;width:400px;background-color:#333;overflow:auto;border-radius:5px;
+    border:2px solid #FFF;padding: 0.8em 1em;font-size: 0.9em;">
+    <b>Api key</b> - [URL]?api_token=<i style="color:yellow;">yJsEhmB5HpnuvPMu</i></pre>
+    <h1 style="color:#4a4a4a;font-weight:inherit;">CARS | Endpoints</h1><p style="margin-bottom:0;font-family:monospace;">
+    Vehicles</p><pre style="color:#FFF;width:400px;background-color:#333;overflow:auto;border-radius:5px;
+    border:2px solid #FFF;padding: 0.8em 1em;font-size: 0.9em;">
+    <b>GET</b> - http://cars.laradex.com/vehicles
+
+    <b>POST</b> - http://cars.laradex.com/vehicles
+
+    <b>PUT</b> - http://cars.laradex.com/vehicles/{id}
+
+    <b>DELETE</b> - http://cars.laradex.com/vehicles/{id}</pre>
+    <p style="margin-bottom:0;font-family:monospace;">Vehicle types</p>
+    <pre style="color:#FFF;width:400px;background-color:#333;overflow:auto;
+    border-radius:5px;border:2px solid #FFF;padding: 0.8em 1em;font-size: 0.9em;">
+    <b>GET</b> - http://cars.laradex.com/vehicletypes
+
+    <b>POST</b> - http://cars.laradex.com/vehicletypes
+
+    <b>PUT</b> - http://cars.laradex.com/vehicletypes/{id}
+
+    <b>DELETE</b> - http://cars.laradex.com/vehicletypes/{id}</pre>
+    <p style="margin-bottom:0;font-family:monospace;">Makes</p>
+    <pre style="color:#FFF;width:400px;background-color:#333;overflow:auto;
+    border-radius:5px;border:2px solid #FFF;padding: 0.8em 1em;font-size: 0.9em;">
+    <b>GET</b> - http://cars.laradex.com/makes
+
+    <b>POST</b> - http://cars.laradex.com/makes
+
+    <b>PUT</b> - http://cars.laradex.com/makes/{id}
+
+    <b>DELETE</b> - http://cars.laradex.com/makes/{id}</pre>
+    <p style="margin-bottom:0;font-family:monospace;">Models</p>
+    <pre style="color:#FFF;width:400px;background-color:#333;overflow:auto;
+    border-radius:5px;border:2px solid #FFF;padding: 0.8em 1em;font-size: 0.9em;">
+    <b>GET</b> - http://cars.laradex.com/models[/{make_id}]
+
+    <b>POST</b> - http://cars.laradex.com/models
+
+    <b>PUT</b> - http://cars.laradex.com/models/{id}
+
+    <b>DELETE</b> - http://cars.laradex.com/models/{id}</pre>
+    <p style="margin-bottom:0;font-family:monospace;">Fuels</p>
+    <pre style="color:#FFF;width:400px;background-color:#333;overflow:auto;
+    border-radius:5px;border:2px solid #FFF;padding: 0.8em 1em;font-size: 0.9em;">
+    <b>GET</b> - http://cars.laradex.com/fuels
+
+    <b>POST</b> - http://cars.laradex.com/fuels
+
+    <b>PUT</b> - http://cars.laradex.com/fuels/{id}
+
+    <b>DELETE</b> - http://cars.laradex.com/fuels/{id}</pre>';
+});

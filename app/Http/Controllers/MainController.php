@@ -54,24 +54,20 @@ class MainController extends Controller
             return response()->json($make, 200);
         }
         else{
-            return response()->json(['Message'=>'Make does not exist.'],404);
+            return response()->json(['message'=>'Make does not exist.'],404);
         }
     }
 
-    public function deleteMake(Request $request)
+    public function deleteMake(Request $request, $id)
     {
-        $this->validate($request, [
-            'id' => 'required|integer',
-        ]);
-
-        $make = MainMake::find($request->input('id'));
+        $make = MainMake::find($id);
         if($make)
         {
             $make->delete();
-            return response()->json(['status'=>200,'message'=>'Make removed.'], 200);
+            return response()->json(['message'=>'Make removed.'], 200);
         }
         else{
-            return response()->json(['status'=>404,'message'=>'Make does not exist.'], 404);
+            return response()->json(['message'=>'Make does not exist.'], 404);
         }
     }
 
@@ -132,13 +128,9 @@ class MainController extends Controller
         }
     }
 
-    public function deleteModel(Request $request)
+    public function deleteModel(Request $request, $id)
     {
-        $this->validate($request, [
-            'id' => 'required|integer',
-        ]);
-
-        $model = MakeModel::find($request->input('id'));
+        $model = MakeModel::find($id);
         if($model)
         {
             $model->delete();
@@ -187,13 +179,9 @@ class MainController extends Controller
         }
     }
 
-    public function deleteFuel(Request $request)
+    public function deleteFuel(Request $request, $id)
     {
-        $this->validate($request, [
-            'id' => 'required|integer',
-        ]);
-
-        $fuel = Fuel::find($request->input('id'));
+        $fuel = Fuel::find($id);
         if($fuel)
         {
             $fuel->delete();
@@ -241,20 +229,16 @@ class MainController extends Controller
         }
     }
 
-    public function deleteVehicleType(Request $request)
+    public function deleteVehicleType(Request $request, $id)
     {
-        $this->validate($request, [
-            'id' => 'required|integer',
-        ]);
-
-        $vehicleType = VehicleType::find($request->input('id'));
+        $vehicleType = VehicleType::find($id);
         if($vehicleType)
         {
             $vehicleType->delete();
             return response()->json(['message'=>'Vehicle type removed.'],200);
         }
         else{
-            return response()->json(['Message'=>'Vehicle type does not exist.'],400);
+            return response()->json(['message'=>'Vehicle type does not exist.'],400);
         }
     }
 
@@ -358,14 +342,9 @@ class MainController extends Controller
 
     }
 
-    public function deleteVehicle(Request $request)
+    public function deleteVehicle(Request $request, $id)
     {
-        $this->validate($request, [
-            'id' => 'required|integer',
-        ]);
-
-        $vehicle = Vehicle::find($request->input('id'));
-
+        $vehicle = Vehicle::find($id);
         if($vehicle) {
 
             if ($vehicle->image != base_path('public/images/default.jpg')) {
@@ -375,7 +354,7 @@ class MainController extends Controller
             return response()->json(['message'=>'Vehicle removed.'],200);
         }
         else{
-            return response()->json(['Message'=>'Vehicle does not exist.'],400);
+            return response()->json(['message'=>'Vehicle does not exist.'],400);
         }
     }
 
