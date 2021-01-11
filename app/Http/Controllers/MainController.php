@@ -69,23 +69,23 @@ class MainController extends Controller
         if($make)
         {
             $make->delete();
-            return response()->json(['status'=>200,'message'=>'Make removed.'] ,200);
+            return response()->json(['status'=>200,'message'=>'Make removed.'], 200);
         }
         else{
-            return response()->json(['status'=>404,'message'=>'Make does not exist.'],404);
+            return response()->json(['status'=>404,'message'=>'Make does not exist.'], 404);
         }
     }
 
     /* Models methods */
     public function getModels(Request $request)
     {
-        $models = MakeModel::All();
+        $models = MakeModel::with(['make'])->get();
         $make = $request->input('make');
 
         if ($make) {
-            $models = MakeModel::where('main_make_id',$make)->get();
+            $models = MakeModel::with(['make'])->where('main_make_id',$make)->get();
         }
-        return response()->json($models,200);
+        return response()->json($models, 200);
     }
 
 
@@ -104,7 +104,8 @@ class MainController extends Controller
             $model->name = $request->input('name');
             $model->main_make_id = $make_id;
             $model->save();
-            return response()->json($model,200);
+            $model_created = MakeModel::with(['make'])->where('id',$model->id)->first();
+            return response()->json($model_created, 200);
         }else{
             return response()->json(['Message'=>'make does not exist.'], 404);
         }
@@ -125,7 +126,8 @@ class MainController extends Controller
             $model->name = $request->input('name');
             $model->main_make_id = $make_id;
             $model->save();
-            return response()->json($model,200);
+            $model_updated = MakeModel::with(['make'])->where('id',$model->id)->first();
+            return response()->json($model_updated, 200);
         }else{
             return response()->json(['Message'=>'make does not exist.'], 400);
         }
@@ -141,10 +143,10 @@ class MainController extends Controller
         if($model)
         {
             $model->delete();
-            return response()->json(['message'=>'Model removed.'],200);
+            return response()->json(['message'=>'Model removed.'], 200);
         }
         else{
-            return response()->json(['Message'=>'Model does not exist.'],404);
+            return response()->json(['Message'=>'Model does not exist.'], 404);
         }
             
     }
