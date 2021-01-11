@@ -261,7 +261,7 @@ class MainController extends Controller
     /* Vehicle methods */
     public function getVehicles()
     {
-        $vehicle = Vehicle::with(['fuel','model','vehicleType','make'])->get();
+        $vehicle = Vehicle::orderBy('id','DESC')->with(['fuel','model','vehicleType','make'])->get();
         return response()->json($vehicle,200);
     }
 
@@ -298,6 +298,8 @@ class MainController extends Controller
 
         if ($request->hasFile('image')) {
             $vehicle->image = $this->saveImage($request->file('image'));
+        }else{
+            $vehicle->image = base_path('public/images/default.jpg');
         }
 
         $vehicle->save();
@@ -340,7 +342,10 @@ class MainController extends Controller
 
             if ($request->hasFile('image')) {
                 $search = public_path().'/images/'.$vehicle->image;
-                \File::delete($search);
+                if ($vehicle->image != base_path('public/images/default.jpg')) {
+                    \File::delete($search);
+                }
+                
                 $vehicle->image = $this->saveImage($request->file('image'));
             }
 
@@ -362,8 +367,10 @@ class MainController extends Controller
         $vehicle = Vehicle::find($request->input('id'));
 
         if($vehicle) {
-            \File::delete(base_path('public/images/'), $name);
 
+            if ($vehicle->image != base_path('public/images/default.jpg')) {
+                \File::delete(base_path('public/images/'), $name);
+            }
             $vehicle->delete();
             return response()->json(['message'=>'Vehicle removed.'],200);
         }
@@ -374,10 +381,8 @@ class MainController extends Controller
 
     public function saveImage($file)
     {
-        /* file:///C:/wamp64/www/cars-lumen/public/images/ */
         $name = time().$file->getClientOriginalName();
         $file->move(base_path('public/images/'), $name);
-        //return $name;
         return base_path('public/images/').$name;
     }
 }
