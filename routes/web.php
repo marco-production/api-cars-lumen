@@ -23,10 +23,10 @@ $router->get('/users[/{slug}]', [ 'uses' => 'UserController@getUsers', 'as' => '
 $router->post('/vehicles', [ 'uses' => 'MainController@createVehicle']);
 
 //READ
-$router->get('/vehicles', [ 'uses' => 'MainController@getVehicles', 'as' => 'Vehicles']);
+$router->get('/vehicles[/{slug}]', [ 'uses' => 'MainController@getVehicles', 'as' => 'Vehicles']);
 
 //UPDATE
-$router->put('/vehicles/{id}', [ 'uses' => 'MainController@updateVehicle']);
+$router->post('/vehicles/{id}', [ 'uses' => 'MainController@updateVehicle']);
 
 //DELETE
 $router->delete('/vehicles/{id}', [ 'uses' => 'MainController@deleteVehicle']);
@@ -97,11 +97,11 @@ $router->get('/', function () use ($router) {
     <h1 style="color:#4a4a4a;font-weight:inherit;">CARS | Endpoints</h1><p style="margin-bottom:0;font-family:monospace;">
     Vehicles</p><pre style="color:#FFF;width:400px;background-color:#333;overflow:auto;border-radius:5px;
     border:2px solid #FFF;padding: 0.8em 1em;font-size: 0.9em;">
-    <b>GET</b> - http://cars.laradex.com/vehicles
+    <b>GET</b> - http://cars.laradex.com/vehicles[/{slug}]
 
     <b>POST</b> - http://cars.laradex.com/vehicles
 
-    <b>PUT</b> - http://cars.laradex.com/vehicles/{id}
+    <b>POST - UPDATE</b> - http://cars.laradex.com/vehicles/{id}
 
     <b>DELETE</b> - http://cars.laradex.com/vehicles/{id}</pre>
     <p style="margin-bottom:0;font-family:monospace;">Vehicle types</p>

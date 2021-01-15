@@ -72,17 +72,15 @@ class MainController extends Controller
     }
 
     /* Models methods */
-    public function getModels(Request $request)
+    public function getModels($make = null)
     {
         $models = MakeModel::with(['make'])->get();
-        $make = $request->input('make');
 
-        if ($make) {
+        if (!is_null($make)) {
             $models = MakeModel::with(['make'])->where('main_make_id',$make)->get();
         }
         return response()->json($models, 200);
     }
-
 
     public function createModel(Request $request)
     {
@@ -102,7 +100,7 @@ class MainController extends Controller
             $model_created = MakeModel::with(['make'])->where('id',$model->id)->first();
             return response()->json($model_created, 200);
         }else{
-            return response()->json(['Message'=>'make does not exist.'], 404);
+            return response()->json(['message'=>'make does not exist.'], 404);
         }
     }
 
@@ -124,7 +122,7 @@ class MainController extends Controller
             $model_updated = MakeModel::with(['make'])->where('id',$model->id)->first();
             return response()->json($model_updated, 200);
         }else{
-            return response()->json(['Message'=>'make does not exist.'], 400);
+            return response()->json(['message'=>'make does not exist.'], 400);
         }
     }
 
@@ -137,7 +135,7 @@ class MainController extends Controller
             return response()->json(['message'=>'Model removed.'], 200);
         }
         else{
-            return response()->json(['Message'=>'Model does not exist.'], 404);
+            return response()->json(['message'=>'Model does not exist.'], 404);
         }
             
     }
@@ -175,7 +173,7 @@ class MainController extends Controller
             return response()->json($fuel,200);
         }
         else{
-            return response()->json(['Message'=>'Fuel does not exist.'],400);
+            return response()->json(['message'=>'Fuel does not exist.'],400);
         }
     }
 
@@ -188,7 +186,7 @@ class MainController extends Controller
             return response()->json(['message'=>'Fuel removed.'],200);
         }
         else{
-            return response()->json(['Message'=>'Fuel does not exist.'],400);
+            return response()->json(['message'=>'Fuel does not exist.'],400);
         }
     }
 
@@ -225,7 +223,7 @@ class MainController extends Controller
             return response()->json($vehicleType,200);
         }
         else{
-            return response()->json(['Message'=>'Vehicle type does not exist.'],400);
+            return response()->json(['message'=>'Vehicle type does not exist.'],400);
         }
     }
 
@@ -243,16 +241,25 @@ class MainController extends Controller
     }
 
     /* Vehicle methods */
-    public function getVehicles()
+    public function getVehicles($slug = null)
     {
-        $vehicle = Vehicle::orderBy('id','DESC')->with(['fuel','model','vehicleType','make'])->get();
-        return response()->json($vehicle,200);
+        $vehicles = Vehicle::orderBy('id','DESC')->with(['fuel','model','vehicleType','make'])->get();
+
+        if (!is_null($slug)) {
+            $vehicles = Vehicle::where('slug',$slug)->with(['fuel','model','vehicleType','make'])->first();
+
+            if(!$vehicles){
+                return response()->json(['message'=>'Vehicle does not exist.'], 404);
+            }
+        }
+        return response()->json($vehicles, 200);
     }
 
     /* Vehicle methods */
     public function createVehicle(Request $request)
     {
         $this->validate($request, [
+            'make_id' => 'required|integer',
             'model_id' => 'required|integer',
             'fuel_id' => 'required|integer',
             'vehicle_type_id' => 'required|integer',
@@ -287,12 +294,14 @@ class MainController extends Controller
         }
 
         $vehicle->save();
-        return response()->json($vehicle,200);
+        $vehicle_created = Vehicle::where('id',$vehicle->id)->with(['fuel','model','vehicleType','make'])->first();
+        return response()->json($vehicle_created, 200);
     }
 
     public function updateVehicle(Request $request, $id)
     {
         $this->validate($request, [
+            'make_id' => 'required|integer',
             'model_id' => 'required|integer',
             'fuel_id' => 'required|integer',
             'vehicle_type_id' => 'required|integer',
@@ -325,8 +334,8 @@ class MainController extends Controller
             }
 
             if ($request->hasFile('image')) {
-                $search = public_path().'/images/'.$vehicle->image;
                 if ($vehicle->image != base_path('public/images/default.jpg')) {
+                    $search = public_path().'/images/'.$vehicle->image;
                     \File::delete($search);
                 }
                 
@@ -334,10 +343,11 @@ class MainController extends Controller
             }
 
             $vehicle->save();
-            return response()->json($vehicle,200);
+            $vehicle_updated = Vehicle::where('id',$vehicle->id)->with(['fuel','model','vehicleType','make'])->first();
+            return response()->json($vehicle_updated, 200);
         }
         else{
-            return response()->json(['Message'=>'Model does not exist.'],404);
+            return response()->json(['message'=>'Model does not exist.'],404);
         }
 
     }

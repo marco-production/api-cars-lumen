@@ -15,8 +15,8 @@ class VehicleType extends Model
         'name',
     ];
 
-/*     public function vehicle()
+    public function vehicle()
     {
         return $this->hasMany(Vehicle::class);
-    } */
+    }
 }
