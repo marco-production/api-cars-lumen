@@ -93,7 +93,7 @@ $router->get('/', function () use ($router) {
     return '<b>Marco Antonio De la cruz Santos</b><br>'.$router->app->version().'<br>'
     .'<pre style="color:#FFF;width:400px;background-color:#333;overflow:auto;border-radius:5px;
     border:2px solid #FFF;padding: 0.8em 1em;font-size: 0.9em;">
-    <b>Api key</b> - [URL]?api_token=<i style="color:yellow;">yJsEhmB5HpnuvPMu</i></pre>
+    <b>Api key | <u>Header</u></b>: api_token = <i style="color:yellow;">yJsEhmB5HpnuvPMu</i></pre>
     <h1 style="color:#4a4a4a;font-weight:inherit;">CARS | Endpoints</h1><p style="margin-bottom:0;font-family:monospace;">
     Vehicles</p><pre style="color:#FFF;width:400px;background-color:#333;overflow:auto;border-radius:5px;
     border:2px solid #FFF;padding: 0.8em 1em;font-size: 0.9em;">
