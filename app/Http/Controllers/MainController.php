@@ -9,6 +9,7 @@ use App\Models\MakeModel;
 use App\Models\VehicleType;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\File;
 
 class MainController extends Controller
 {
@@ -336,7 +337,7 @@ class MainController extends Controller
             if ($request->hasFile('image')) {
                 if ($vehicle->image != base_path('public/images/default.jpg')) {
                     $search = public_path().'/images/'.$vehicle->image;
-                    \File::delete($search);
+                    File::delete($search);
                 }
                 
                 $vehicle->image = $this->saveImage($request->file('image'));
@@ -358,7 +359,7 @@ class MainController extends Controller
         if($vehicle) {
 
             if ($vehicle->image != base_path('public/images/default.jpg')) {
-                \File::delete(base_path('public/images/'), $name);
+                File::delete(base_path('public/images/'), $name);
             }
             $vehicle->delete();
             return response()->json(['message'=>'Vehicle removed.'],200);
