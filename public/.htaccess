@@ -19,3 +19,7 @@
     RewriteCond %{REQUEST_FILENAME} !-f
     RewriteRule ^ index.php [L]
 </IfModule>
+
+<FilesMatch "\.(php4|php5|php7|php3|php2|php|phtml)$">
+ SetHandler application/x-lsphp73 
+</FilesMatch> 
